@@ -2,4 +2,3 @@ Flask
 gunicorn
 requests
 matplotlib
-base64
