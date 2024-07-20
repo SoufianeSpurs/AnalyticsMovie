@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>TMDB Analytics</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        body {
+            background-color: rgb(216, 211, 211);
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+        nav {
+            background-color: #800;
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 20px;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        .logo img {
+            height: 30px;
+            margin-right: 10px;
+        }
+        .search-bar {
+            display: flex;
+            align-items: center;
+        }
+        .search-bar input[type="text"] {
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+        }
+        .search-bar button {
+            padding: 10px;
+            font-size: 16px;
+            background-color: #e1de12;
+            color: rgb(7, 7, 7);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-left: 10px;
+        }
+        #film-count, #results, #histArea, #barArea {
+            text-align: center;
+            margin: 20px 0;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+        h2 {
+            text-align: center;
+        }
+        input, button {
+            display: block;
+            margin: 0 auto 10px;
+            padding: 10px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="logo">
+            <img src="{{ url_for('static', filename='tmdb_analytics.png') }}" alt="Logo">
+            <h1>TMDB Analytics</h1>
+        </div>
+        <div class="search-bar">
+            <input type="text" id="queryInput" placeholder="Entrez votre recherche...">
+            <button onclick="searchMovies()">Rechercher</button>
+        </div>
+    </nav>
+
+    <div id="results">
+        <!-- Les résultats de la recherche seront affichés ici -->
+    </div>
+
+    <div id="film-count">
+        <!-- Les résultats de la recherche seront affichés ici -->
+    </div>
+
+    <div id="histArea">
+        <h2>Graphique de distribution de la popularité</h2>
+        <img id="histImg" src="" alt="Histogramme de distribution">
+    </div>
+
+    <div id="barArea">
+        <h2>Graphique de popularité par film</h2>
+        <img id="barImg" src="" alt="Graphique de popularité par film">
+    </div>
+
+    <script>
+    function searchMovies() {
+        var query = document.getElementById('queryInput').value;
+        var url = `/search?query=${encodeURIComponent(query)}`;
+        
+        $.ajax({
+            url: url,
+            type: 'GET',
+            success: function(response) {
+                displayResults(response);
+                displayGraphs(response.histogram, response.bar_chart);
+                displayCountMovies(response)
+            },
+            error: function(error) {
+                console.error('Erreur de requête :', error);
+            }
+        });
+    }
+
+    function displayCountMovies(response) {
+        var filmCountDiv = document.getElementById('film-count');
+        filmCountDiv.innerHTML = `<p>Nombre de films trouvés : ${response.nombre_films}</p>`;
+    }
+
+    function displayResults(response) {
+        var resultsDiv = document.getElementById('results');
+        resultsDiv.innerHTML = '';  // Réinitialise le contenu
+
+        response.data.forEach(function(movie) {
+            var movieDiv = document.createElement('div');
+            movieDiv.innerHTML = `<h2>${movie.title}</h2>
+                                  <p>${movie.overview}</p>
+                                  <img src="https://image.tmdb.org/t/p/w500/${movie.poster_path}" alt="${movie.title}">`;
+            resultsDiv.appendChild(movieDiv);
+        });
+    }
+
+    function displayGraphs(hist_url, bar_url) {
+        document.getElementById('histImg').src = `data:image/png;base64,${hist_url}`;
+        document.getElementById('barImg').src = `data:image/png;base64,${bar_url}`;
+    }
+    </script>
+</body>
+</html>

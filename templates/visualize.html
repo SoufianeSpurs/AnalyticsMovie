@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualisation des données</title>
+</head>
+<body>
+    <h1>Visualisations pour la ville de {{ city }}</h1>
+
+    <h2>Nombre de restaurants par type de cuisine</h2>
+    <img src="data:image/png;base64,{{ cuisine_plot }}" alt="Cuisine Plot">
+
+    <h2>Distribution des notes des restaurants</h2>
+    <img src="data:image/png;base64,{{ rating_plot }}" alt="Rating Plot">
+
+    <h2>Nombre de restaurants offrant la livraison et le retrait</h2>
+    <img src="data:image/png;base64,{{ service_plot }}" alt="Service Plot">
+
+    <a href="/">Retour</a>
+</body>
+</html>

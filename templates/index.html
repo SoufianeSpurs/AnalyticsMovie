@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau de bord des restaurants</title>
+</head>
+<body>
+    <h1>Tableau de bord des restaurants en Amérique du Nord</h1>
+    <form action="/visualize" method="post">
+        <label for="city">Choisir une ville:</label>
+        <select id="city" name="city">
+            {% for city in cities %}
+            <option value="{{ city }}">{{ city }}</option>
+            {% endfor %}
+        </select>
+        <button type="submit">Visualiser</button>
+    </form>
+</body>
+</html>
